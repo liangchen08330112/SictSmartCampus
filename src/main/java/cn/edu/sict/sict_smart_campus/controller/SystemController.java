@@ -1,16 +1,14 @@
 package cn.edu.sict.sict_smart_campus.controller;
 
-import cn.edu.sict.sict_smart_campus.dao.Admin;
-import cn.edu.sict.sict_smart_campus.dao.LoginForm;
-import cn.edu.sict.sict_smart_campus.dao.Student;
-import cn.edu.sict.sict_smart_campus.dao.Teacher;
+import cn.edu.sict.sict_smart_campus.data.Admin;
+import cn.edu.sict.sict_smart_campus.data.LoginForm;
+import cn.edu.sict.sict_smart_campus.data.Student;
+import cn.edu.sict.sict_smart_campus.data.Teacher;
 import cn.edu.sict.sict_smart_campus.service.AdminService;
 import cn.edu.sict.sict_smart_campus.service.StudentService;
 import cn.edu.sict.sict_smart_campus.service.TeacherService;
-import cn.edu.sict.sict_smart_campus.util.CreateVerificationCodeImage;
-import cn.edu.sict.sict_smart_campus.util.JwtHelper;
-import cn.edu.sict.sict_smart_campus.util.Result;
-import cn.edu.sict.sict_smart_campus.util.ResultCodeEnum;
+import cn.edu.sict.sict_smart_campus.util.*;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +37,75 @@ public class SystemController {
     private TeacherService teacherService;
     @Autowired
     private StudentService studentService;
+
+    //修改密码
+    @ApiOperation("修改密码")
+    @PostMapping("/updatePwd/{oldPwd}/{newPwd}")
+    public Result updatePwd(
+            @RequestHeader("token") String token,
+            @PathVariable("oldPwd") String oldPwd,
+            @PathVariable("newPwd") String newPwd
+    ){
+        //判断token是否过期
+        boolean expiration = JwtHelper.isExpiration(token);
+        if(expiration){
+            //为TRUE即过期
+            return Result.fail().message("token已过期，请重新登录");
+        }
+
+        //获取用户的信息
+        Long userId = JwtHelper.getUserId(token);
+        Integer userType = JwtHelper.getUserType(token);
+
+        //MD5加密
+        oldPwd = MD5.encrypt(oldPwd);
+        newPwd = MD5.encrypt(newPwd);
+
+        switch (userType){
+            case 1:
+                QueryWrapper<Admin> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("id",userId.intValue());
+                queryWrapper1.eq("password",oldPwd);
+
+                Admin admin = adminService.getOne(queryWrapper1);
+                //如果原密码正确
+                if(admin !=null){
+                    //修改,将新密码设置后修改
+                    admin.setPassword(newPwd);
+                    adminService.saveOrUpdate(admin);
+                }else {
+                    return Result.fail().message("旧密码输入错误");
+                }
+                break;
+            case 2:
+                QueryWrapper<Student> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("id",userId.intValue());
+                queryWrapper2.eq("password",oldPwd);
+                Student student = studentService.getOne(queryWrapper2);
+                //如果原密码正确
+                if(student !=null){
+                    //修改密码
+                    student.setPassword(newPwd);
+                    studentService.saveOrUpdate(student);
+                }else {
+                    return Result.fail().message("旧密码输入错误");
+                }
+                break;
+            case 3:
+                QueryWrapper<Teacher> queryWrapper3 = new QueryWrapper<>();
+                queryWrapper3.eq("id",userId.intValue());
+                queryWrapper3.eq("password",oldPwd);
+                Teacher teacher = teacherService.getOne(queryWrapper3);
+                if(teacher !=null){
+                    teacher.setPassword(newPwd);
+                    teacherService.saveOrUpdate(teacher);
+                }else{
+                    return Result.fail().message("旧密码输入错误");
+                }
+                break;
+        }
+        return Result.ok();
+    }
     @ApiOperation("文件上传统一入口")
     @PostMapping("/headerImgUpload")
     public Result headerImgUpload(
@@ -60,12 +127,12 @@ public class SystemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //响应图片的路径
+        //图片路径
         String path = "upload/"+newFileName;
         return Result.ok(path);
     }
 
+    @ApiOperation("获取信息")
     @GetMapping("/getInfo")
     public Result getInfoByToken(@RequestHeader("token") String token) {
         boolean expiration = JwtHelper.isExpiration(token);
@@ -96,6 +163,7 @@ public class SystemController {
         return Result.ok(map);
     }
 
+    @ApiOperation("登录")
     @PostMapping("/login")
     public Result login(@RequestBody LoginForm form,HttpServletRequest hsr) {
         //验证码校验
@@ -167,6 +235,7 @@ public class SystemController {
         }
         return Result.fail().message("用户不存在");
     }
+    @ApiOperation("获取验证码图片")
     @GetMapping("/getVerifiCodeImage")
     public void getVerifiedCodeImage(HttpServletRequest hsr, HttpServletResponse response){
         //获取图片

@@ -1,8 +1,7 @@
 package cn.edu.sict.sict_smart_campus.service.impl;
 
-import cn.edu.sict.sict_smart_campus.dao.Admin;
-import cn.edu.sict.sict_smart_campus.dao.LoginForm;
-import cn.edu.sict.sict_smart_campus.dao.Student;
+import cn.edu.sict.sict_smart_campus.data.LoginForm;
+import cn.edu.sict.sict_smart_campus.data.Student;
 import cn.edu.sict.sict_smart_campus.mapper.StudentMapper;
 import cn.edu.sict.sict_smart_campus.service.StudentService;
 import cn.edu.sict.sict_smart_campus.util.MD5;

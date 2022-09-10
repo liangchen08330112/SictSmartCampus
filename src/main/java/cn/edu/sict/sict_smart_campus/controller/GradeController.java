@@ -1,6 +1,6 @@
 package cn.edu.sict.sict_smart_campus.controller;
 
-import cn.edu.sict.sict_smart_campus.dao.Grade;
+import cn.edu.sict.sict_smart_campus.data.Grade;
 import cn.edu.sict.sict_smart_campus.service.GradeService;
 import cn.edu.sict.sict_smart_campus.util.Result;
 import com.baomidou.mybatisplus.core.metadata.IPage;

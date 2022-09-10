@@ -1,4 +1,4 @@
-package cn.edu.sict.sict_smart_campus.dao;
+package cn.edu.sict.sict_smart_campus.data;
 
 import lombok.Data;
 

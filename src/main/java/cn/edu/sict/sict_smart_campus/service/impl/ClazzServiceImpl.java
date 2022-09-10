@@ -1,6 +1,6 @@
 package cn.edu.sict.sict_smart_campus.service.impl;
 
-import cn.edu.sict.sict_smart_campus.dao.Clazz;
+import cn.edu.sict.sict_smart_campus.data.Clazz;
 import cn.edu.sict.sict_smart_campus.mapper.ClazzMapper;
 import cn.edu.sict.sict_smart_campus.service.ClazzService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

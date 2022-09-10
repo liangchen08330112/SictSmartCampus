@@ -1,6 +1,6 @@
 package cn.edu.sict.sict_smart_campus.controller;
 
-import cn.edu.sict.sict_smart_campus.dao.Clazz;
+import cn.edu.sict.sict_smart_campus.data.Clazz;
 import cn.edu.sict.sict_smart_campus.service.ClazzService;
 import cn.edu.sict.sict_smart_campus.util.Result;
 import com.baomidou.mybatisplus.core.metadata.IPage;

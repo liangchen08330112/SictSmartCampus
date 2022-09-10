@@ -1,4 +1,4 @@
-package cn.edu.sict.sict_smart_campus.dao;
+package cn.edu.sict.sict_smart_campus.data;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

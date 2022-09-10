@@ -1,6 +1,6 @@
 package cn.edu.sict.sict_smart_campus.service.impl;
 
-import cn.edu.sict.sict_smart_campus.dao.Grade;
+import cn.edu.sict.sict_smart_campus.data.Grade;
 import cn.edu.sict.sict_smart_campus.mapper.GradeMapper;
 import cn.edu.sict.sict_smart_campus.service.GradeService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
